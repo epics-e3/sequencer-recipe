@@ -1,6 +1,5 @@
 #
 #  Copyright (c) 2018 - Present  Jeong Han Lee
-#  Copyright (c) 2017 - Present  European Spallation Source ERIC
 #
 #  The program is free software: you can redistribute
 #  it and/or modify it under the terms of the GNU General Public License
@@ -16,32 +15,20 @@
 #  this program. If not, see https://www.gnu.org/licenses/gpl-2.0.txt
 #
 # Author  : Jeong Han Lee
-# email   : han.lee@esss.se
-# Date    : Saturday, February 10 18:40:25 CET 2018
-# version : 
-
-# Get where_am_I before include driver.makefile.
-# After driver.makefile, where_am_I is the epics base,
-# so we cannot use it
-
+# email   : jeonghan.lee@gmail.com
+# Date    : Tuesday, September 18 11:55:37 CEST 2018
+# version : 0.0.2
+#
+# LEGACY_RSET should be defined before driver.makefile
+# require-ess from 3.0.1
+LEGACY_RSET = YES
 
 where_am_I := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-
 include $(E3_REQUIRE_TOOLS)/driver.makefile
 
-SEQUENCER      :=src
-SEQUENCERDEV   :=$(SEQUENCER)/dev
-SEQUENCERLEMON :=$(SEQUENCER)/lemon
-SEQUENCERPV    :=$(SEQUENCER)/pv
-SEQUENCERSEQ   :=$(SEQUENCER)/seq
-SEQUENCERSNC   :=$(SEQUENCER)/snc
+## Exclude linux-ppc64e6500
+#EXCLUDE_ARCHS = linux-ppc64e6500
 
-
-USR_INCLUDES += -I$(COMMON_DIR)
-USR_INCLUDES += -I$(where_am_I)/$(SEQUENCERCOMMON)
-USR_INCLUDES += -I$(where_am_I)/$(SEQUENCERPV)
-USR_INCLUDES += -I$(where_am_I)/$(SEQUENCERSEQUENCER)
-USR_INCLUDES += -I$(where_am_I)/$(SEQUENCERSNC)
 
 
 # LIBVERSION is defined in configure/CONFIG
@@ -50,15 +37,28 @@ USR_INCLUDES += -I$(where_am_I)/$(SEQUENCERSNC)
 SEQ_VER=$(LIBVERSION)
 
 
-DBDS     = $(SEQUENCERDEV)/devSequencer.dbd
 
-HEADERS += $(SEQUENCERPV)/pv.h
-HEADERS += $(SEQUENCERPV)/pvAlarm.h
-HEADERS += $(SEQUENCERPV)/pvType.h
+SEQUENCER      :=src
+SEQUENCERPV    :=$(SEQUENCER)/pv
+SEQUENCERCOMMON:=$(SEQUENCER)/common
+SEQUENCERSEQ   :=$(SEQUENCER)/seq
+SEQUENCERLEMON :=$(SEQUENCER)/lemon
+SEQUENCERSNC   :=$(SEQUENCER)/snc
+
+
+
+
+USR_INCLUDES += -I$(COMMON_DIR)
+USR_INCLUDES += -I$(where_am_I)$(SEQUENCERPV)
+USR_INCLUDES += -I$(where_am_I)$(SEQUENCERCOMMON)
+USR_INCLUDES += -I$(where_am_I)$(SEQUENCERSEQ)
+USR_INCLUDES += -I$(where_am_I)$(SEQUENCERSNC)
+
+
 
 HEADERS += $(SEQUENCERSEQ)/seqCom.h
 HEADERS += $(SEQUENCERSEQ)/seqStats.h
-HEADERS += $(COMMON_DIR)/seq_release.h
+HEADERS += $(SEQUENCERSEQ)/seq_snc.h
 
 
 SOURCES += $(SEQUENCERSEQ)/seq_main.c
@@ -71,12 +71,22 @@ SOURCES += $(SEQUENCERSEQ)/seq_qry.c
 SOURCES += $(SEQUENCERSEQ)/seq_cmd.c
 SOURCES += $(SEQUENCERSEQ)/seq_queue.c
 
-SOURCES += $(SEQUENCERPV)/pv.cc
-SOURCES += $(SEQUENCERPV)/pvNew.cc
-SOURCES += $(SEQUENCERPV)/pvCa.cc
 
-SOURCES += $(SEQUENCERDEV)/devSequencer.c
 
+
+HEADERS += $(SEQUENCERCOMMON)/seq_mask.h
+HEADERS += $(SEQUENCERCOMMON)/seq_prim_types.h
+HEADERS += $(COMMON_DIR)/seq_release.h
+
+
+
+HEADERS += $(SEQUENCERPV)/pv.h
+HEADERS += $(SEQUENCERPV)/pvAlarm.h
+HEADERS += $(SEQUENCERPV)/pvType.h
+
+SOURCES += $(SEQUENCERPV)/pv.c
+
+HEADERS += $(SEQUENCERSNC)/seqMain.c
 
 # Why!!!!
 
@@ -93,8 +103,6 @@ BINS += $(LEMON)
 BINS += $(SNC)
 
 
-USR_CPPFLAGS += -DPVCA
-
 
 vpath %.c   $(where_am_I)$(SEQUENCERSNC)
 vpath %.h   $(where_am_I)$(SEQUENCERSNC)
@@ -104,21 +112,26 @@ vpath %.lt  $(where_am_I)$(SEQUENCERSNC)
 vpath %.re  $(where_am_I)$(SEQUENCERSNC)
 
 
-devSequencer$(DEP): $(COMMON_DIR)/seq_release.h $(SNC)
-	@echo  $(HOSTEXE)
+#pv$(DEP): $(COMMON_DIR)/seq_release.h# $(SNC)
+#	@echo  $(HOSTEXE)
+
+pv$(DEP): $(COMMON_DIR)/seq_release.h $(SNC)
 
 $(COMMON_DIR)/seq_release.h:
 #	@echo "$(COMMON_DIR) O.${EPICSVERSION}_$(T_A)"
 	$(RM) $@
-	$(PERL) $(where_am_I)$(SEQUENCERSEQ)/seq_release.pl $(SEQ_VER) > $@
+	$(PERL) $(where_am_I)$(SEQUENCERCOMMON)/seq_release.pl $(SEQ_VER) > $@
+
 
 
 # We only use linux, so I added $(OP_SYS_LDFLAGS) $(ARCH_DEP_LDFLAGS)
-$(SNC): lexer.c $(patsubst %.c,%.o, lexer.c snl.c main.c expr.c var_types.c analysis.c gen_code.c gen_ss_code.c gen_tables.c builtin.c  sym_table.c )
+$(SNC): lexer.c $(patsubst %.c,%.o, lexer.c snl.c main.c node.c var_types.c analysis.c gen_code.c gen_ss_code.c gen_tables.c sym_table.c builtin.c type_check.c )
+	@echo ""
 	@echo ""
 	@echo ">>>>> snc Init "
-	$(CCC) -o $@ -L $(EPICS_BASE_LIB) -Wl,-rpath,$(EPICS_BASE_LIB) $(OP_SYS_LDFLAGS) $(ARCH_DEP_LDFLAGS)  $(filter %.o, $^) -lCom -ldbRecStd -ldbCore -lca 
+	$(CCC) -o $@ -L $(EPICS_BASE_LIB) -Wl,-rpath,$(EPICS_BASE_LIB) $(OP_SYS_LDFLAGS) $(ARCH_DEP_LDFLAGS)  $(filter %.o, $^) -lCom
 	@echo "<<<<< snc Done"
+	@echo ""
 	@echo ""
 
 lexer.c: snl.re snl.h
@@ -127,6 +140,8 @@ lexer.c: snl.re snl.h
 snl.c snl.h: $(addprefix $(where_am_I)$(SEQUENCERSNC)/, snl.lem snl.lt) $(LEMON)
 	$(RM) snl.c snl.h
 	$(LEMON_HOST) o=. $<
+
+
 
 # 
 # lemon is called in the host, so the hard-coded gcc, which is the host
@@ -144,16 +159,26 @@ snl.c snl.h: $(addprefix $(where_am_I)$(SEQUENCERSNC)/, snl.lem snl.lt) $(LEMON)
 #
 $(LEMON): $(where_am_I)$(SEQUENCERLEMON)/lemon.c
 	@echo ""
+	@echo ""
 	@echo ">>>>> lemon Init "
 	$(RM) $@
 	$(MKDIR) -p $(TEMP_PATH)/bin
 	$(COMPILE.c) -o $(LEMON) $(OP_SYS_CFLAGS) $(ARCH_DEP_CFLAGS) $^
 	@echo "<<<<< lemon Done "
 	@echo ""
+	@echo ""
 
+
+
+## This RULE should be used in case of inflating DB files 
+## db rule is the default in RULES_DB, so add the empty one
+## Please look at e3-mrfioc2 for example.
 
 db:
-#
-.PHONY: vlibs
+
+.PHONY: db
+
+
 vlibs:
-#
+
+.PHONY: vlibs

@@ -1,4 +1,4 @@
-{% set version = "2.1.21" %}
+{% set version = "2.2.6" %}
 
 package:
   name: seq
@@ -6,7 +6,7 @@ package:
 
 source:
   - url: http://www-csr.bessy.de/control/SoftDist/sequencer/releases/seq-{{ version }}.tar.gz
-    sha256: bb6e2f6877200e8fa147feff3309dbd8c0852a68593f4429643a3b898ab008b0
+    sha256: b87e26dea36573c3cc6e7365bfdbabde6eb585fc87124c8b791f9a196891088a
   - path: ../src
 
 
@@ -23,7 +23,7 @@ requirements:
     - {{ compiler('cxx') }}
     - re2c
   host:
-    - epics-base 3.*
+    - epics-base 7.*
     - require
 
 test:
