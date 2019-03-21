@@ -1,0 +1,40 @@
+{% set version = "2.1.21" %}
+
+package:
+  name: seq
+  version: "{{ version }}"
+
+source:
+  - url: http://www-csr.bessy.de/control/SoftDist/sequencer/releases/seq-{{ version }}.tar.gz
+    sha256: bb6e2f6877200e8fa147feff3309dbd8c0852a68593f4429643a3b898ab008b0
+  - path: ../src
+
+
+build:
+  number: 0
+  # Using max_pin='x.x' should be fine according to
+  # https://www-csr.bessy.de/control/SoftDist/sequencer-2-1/Introduction.html#versioning-policy
+  run_exports:
+    - {{ pin_subpackage('seq', max_pin='x.x') }}
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - re2c
+  host:
+    - epics-base 3.*
+    - require
+
+test:
+  requires:
+    - run-iocsh
+  commands:
+    - test -f "${PREFIX}/modules/seq/{{ version }}/bin/linux-x86_64/lemon"
+    - test -f "${PREFIX}/modules/seq/{{ version }}/bin/linux-x86_64/snc"
+    - run-iocsh -r seq
+
+about:
+  home: https://www-csr.bessy.de/control/SoftDist/sequencer/index.html
+  license: EPICS Open License
+  summary: "EPICS State Notation Language compiler and runtime sequencer"
