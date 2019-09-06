@@ -23,7 +23,7 @@ requirements:
     - {{ compiler('cxx') }}
     - re2c
   host:
-    - epics-base 7.*
+    - epics-base
     - require
 
 test:
