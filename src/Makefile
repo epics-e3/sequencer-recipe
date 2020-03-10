@@ -21,7 +21,7 @@
 #
 # LEGACY_RSET should be defined before driver.makefile
 # require-ess from 3.0.1
-LEGACY_RSET = YES
+#LEGACY_RSET = YES
 
 where_am_I := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 include $(E3_REQUIRE_TOOLS)/driver.makefile
@@ -30,6 +30,7 @@ include $(E3_REQUIRE_TOOLS)/driver.makefile
 #EXCLUDE_ARCHS = linux-ppc64e6500
 
 
+USR_CPPFLAGS += -DUSE_TYPED_RSET
 
 # LIBVERSION is defined in configure/CONFIG
 # is transfered via Makefile
