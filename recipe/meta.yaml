@@ -5,7 +5,7 @@ package:
   version: "{{ version }}"
 
 source:
-  - url: http://www-csr.bessy.de/control/SoftDist/sequencer/releases/seq-{{ version }}.tar.gz
+  - url: https://www-csr.bessy.de/control/SoftDist/sequencer/releases/seq-{{ version }}.tar.gz
     sha256: 7f63b5349ec9d72a096ad9e14fe54bfd5cb78ebbe832c57fc87775550451f983
   - path: ../src
 
