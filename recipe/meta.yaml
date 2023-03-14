@@ -1,4 +1,4 @@
-{% set version = "2.2.7" %}
+{% set version = "2.2.9" %}
 
 package:
   name: seq
@@ -6,12 +6,12 @@ package:
 
 source:
   - url: https://www-csr.bessy.de/control/SoftDist/sequencer/releases/seq-{{ version }}.tar.gz
-    sha256: 7f63b5349ec9d72a096ad9e14fe54bfd5cb78ebbe832c57fc87775550451f983
+    sha256: a2fdba045bcbf5f8949ab9b6ebf9a8766cbfc8737afd67fe5fca1ed7b9881398
   - path: ../src
 
 
 build:
-  number: 2
+  number: 0
   # Using max_pin='x.x' should be fine according to
   # https://www-csr.bessy.de/control/SoftDist/sequencer-2-1/Introduction.html#versioning-policy
   # For consistency and to avoid issue we use x.x.x.x
