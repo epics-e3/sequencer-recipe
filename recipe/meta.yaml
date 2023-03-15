@@ -1,7 +1,7 @@
 {% set version = "2.2.9" %}
 
 package:
-  name: seq
+  name: sequencer
   version: "{{ version }}"
 
 source:
@@ -34,9 +34,9 @@ test:
   requires:
     - run-iocsh
   commands:
-    - test -f "${PREFIX}/modules/seq/{{ version }}/bin/linux-x86_64/lemon"
-    - test -f "${PREFIX}/modules/seq/{{ version }}/bin/linux-x86_64/snc"
-    - run-iocsh -r seq
+    - test -f "${PREFIX}/modules/sequencer/{{ version }}/bin/linux-x86_64/lemon"
+    - test -f "${PREFIX}/modules/sequencer/{{ version }}/bin/linux-x86_64/snc"
+    - run-iocsh -r sequencer
 
 about:
   home: https://www-csr.bessy.de/control/SoftDist/sequencer/index.html
