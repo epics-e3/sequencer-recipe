@@ -17,7 +17,7 @@ build:
   # For consistency and to avoid issue we use x.x.x.x
   run_exports:
     - {{ pin_subpackage('sequencer', max_pin='x.x.x.x') }}
-
+  skip: True  # [ppc64]
 requirements:
   build:
     - make
