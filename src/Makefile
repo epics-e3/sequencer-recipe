@@ -61,6 +61,7 @@ HEADERS += $(SEQUENCERSNC)/seqMain.c
 
 
 TEMP_PATH :=$(where_am_I)O.$(EPICSVERSION)_$(T_A)
+LEMON     :=$(TEMP_PATH)/bin/lemon
 SNC       :=$(TEMP_PATH)/bin/snc
 LEMON_HOST:=$(where_am_I)O.$(EPICSVERSION)_$(EPICS_HOST_ARCH)/bin/lemon
 
@@ -68,7 +69,7 @@ LEMON_HOST:=$(where_am_I)O.$(EPICSVERSION)_$(EPICS_HOST_ARCH)/bin/lemon
 SNC_HOST:=$(where_am_I)O.$(EPICSVERSION)_$(EPICS_HOST_ARCH)/bin/snc
 
 # Note that lemon only need to be built for the host architecture.
-BINS_$(EPICS_HOST_ARCH) += $(LEMON_HOST)
+BINS += $(LEMON)
 BINS += $(SNC)
 
 
@@ -80,13 +81,14 @@ vpath %.lt  $(where_am_I)$(SEQUENCERSNC)
 vpath %.re  $(where_am_I)$(SEQUENCERSNC)
 
 
-pv$(DEP): $(COMMON_DIR)/seq_release.h $(SNC)
+pv$(DEP): $(COMMON_DIR)/seq_release.h
 
 $(COMMON_DIR)/seq_release.h:
 	$(RM) $@
 	$(PERL) $(where_am_I)$(SEQUENCERCOMMON)/seq_release.pl $(SEQ_VER) > $@
 
 
+$(DEPFILE): $(SNC)
 
 # We only use linux, so I added $(OP_SYS_LDFLAGS) $(ARCH_DEP_LDFLAGS)
 $(SNC): lexer.c $(patsubst %.c,%.o, lexer.c snl.c main.c node.c var_types.c analysis.c gen_code.c gen_ss_code.c gen_tables.c sym_table.c builtin.c type_check.c )
@@ -101,7 +103,7 @@ $(SNC): lexer.c $(patsubst %.c,%.o, lexer.c snl.c main.c node.c var_types.c anal
 lexer.c: snl.re snl.h
 	re2c -s -b -o $@ $<
 
-snl.c snl.h: $(addprefix $(where_am_I)$(SEQUENCERSNC)/, snl.lem snl.lt) $(LEMON_HOST)
+snl.c snl.h: $(addprefix $(where_am_I)$(SEQUENCERSNC)/, snl.lem snl.lt) $(LEMON)
 	$(RM) snl.c snl.h
 	$(LEMON_HOST) o=. $<
 
@@ -121,13 +123,13 @@ snl.c snl.h: $(addprefix $(where_am_I)$(SEQUENCERSNC)/, snl.lem snl.lt) $(LEMON_
 #
 # $(LINK.c) doesn't work, because it use driver.makefile instead of EPICS BASE
 #
-$(LEMON_HOST): $(where_am_I)$(SEQUENCERLEMON)/lemon.c
+$(LEMON): $(where_am_I)$(SEQUENCERLEMON)/lemon.c
 	@echo ""
 	@echo ""
 	@echo ">>>>> lemon Init "
 	$(RM) $@
 	$(MKDIR) -p $(TEMP_PATH)/bin
-	$(COMPILE.c) -o $(LEMON_HOST) $(OP_SYS_CFLAGS) $(ARCH_DEP_CFLAGS) $^
+	$(COMPILE.c) -o $(LEMON) $(OP_SYS_CFLAGS) $(ARCH_DEP_CFLAGS) $^
 	@echo "<<<<< lemon Done "
 	@echo ""
 	@echo ""
