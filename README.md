@@ -1,6 +1,6 @@
 # seq conda recipe
 
-Home: https://www-csr.bessy.de/control/SoftDist/sequencer/index.html
+Home: https://github.com/epics-modules/sequencer/archive/refs/tags/R2-2-9.tar.gz
 
 Package license: EPICS Open License
 
