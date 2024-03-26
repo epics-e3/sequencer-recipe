@@ -12,9 +12,6 @@ source:
 
 build:
   number: 1
-  # Using max_pin='x.x' should be fine according to
-  # https://www-csr.bessy.de/control/SoftDist/sequencer-2-1/Introduction.html#versioning-policy
-  # For consistency and to avoid issue we use x.x.x.x
   run_exports:
     - {{ pin_subpackage('sequencer', max_pin='x.x.x.x') }}
 
