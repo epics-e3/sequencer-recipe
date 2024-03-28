@@ -5,16 +5,13 @@ package:
   version: "{{ version }}"
 
 source:
-  - url: https://www-csr.bessy.de/control/SoftDist/sequencer/releases/seq-{{ version }}.tar.gz
-    sha256: a2fdba045bcbf5f8949ab9b6ebf9a8766cbfc8737afd67fe5fca1ed7b9881398
+  - url: https://github.com/epics-modules/sequencer/archive/refs/tags/R2-2-9.tar.gz
+    sha256: f5ebecdb231e106bb83db9a5fc877adb03bfd119e879a3668fdfc33d0aacb397
   - path: ../src
 
 
 build:
   number: 1
-  # Using max_pin='x.x' should be fine according to
-  # https://www-csr.bessy.de/control/SoftDist/sequencer-2-1/Introduction.html#versioning-policy
-  # For consistency and to avoid issue we use x.x.x.x
   run_exports:
     - {{ pin_subpackage('sequencer', max_pin='x.x.x.x') }}
 
@@ -39,6 +36,6 @@ test:
     - run-iocsh -r sequencer
 
 about:
-  home: https://www-csr.bessy.de/control/SoftDist/sequencer/index.html
+  home: https://github.com/epics-modules/sequencer
   license: EPICS Open License
   summary: "EPICS State Notation Language compiler and runtime sequencer"
