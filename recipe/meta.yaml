@@ -38,6 +38,6 @@ test:
     - run-iocsh -r sequencer
 
 about:
-  home: https://www-csr.bessy.de/control/SoftDist/sequencer/index.html
+  home: https://github.com/epics-modules/sequencer
   license: EPICS Open License
   summary: "EPICS State Notation Language compiler and runtime sequencer"
