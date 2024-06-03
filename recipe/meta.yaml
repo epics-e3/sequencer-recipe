@@ -13,6 +13,7 @@ source:
 
 
 build:
+  skip: True  # [ppc64]
   number: 2
   run_exports:
     - {{ pin_subpackage('sequencer', max_pin='x.x.x.x') }}
@@ -26,8 +27,8 @@ requirements:
     - {{ compiler('cxx') }}
     - re2c
   host:
-    - epics-base 7.0.8
-    - require 5.1.0
+    - epics-base
+    - require
 
 test:
   requires:
