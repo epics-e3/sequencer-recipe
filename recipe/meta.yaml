@@ -8,10 +8,13 @@ source:
   - url: https://github.com/epics-modules/sequencer/archive/refs/tags/R2-2-9.tar.gz
     sha256: f5ebecdb231e106bb83db9a5fc877adb03bfd119e879a3668fdfc33d0aacb397
   - path: ../src
+  - patches:
+    - patch/update_sequencer_rules.p0.patch
 
 
 build:
-  number: 1
+  skip: True  # [ppc64]
+  number: 2
   run_exports:
     - {{ pin_subpackage('sequencer', max_pin='x.x.x.x') }}
 

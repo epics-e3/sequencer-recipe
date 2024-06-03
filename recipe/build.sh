@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# LIBVERSION shall only include MAJOR.MINOR.PATCH for require
-LIBVERSION=$(echo ${PKG_VERSION}| cut -d'.' -f1-3)
+LIBVERSION=${PKG_VERSION}
 
 if [[ "$EPICS_TARGET_ARCH" == "linux-ppc64e6500" ]]
 then
@@ -14,4 +13,3 @@ make clean
 
 make MODULE=${PKG_NAME} LIBVERSION=${LIBVERSION}
 make MODULE=${PKG_NAME} LIBVERSION=${LIBVERSION} install
-

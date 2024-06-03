@@ -1,0 +1,44 @@
+diff --git configure/RULES_SNCSEQ configure/RULES_SNCSEQ
+index 73fef63..900ebc1 100644
+--- configure/RULES_SNCSEQ
++++ configure/RULES_SNCSEQ
+@@ -35,15 +35,7 @@ ST_DEPENDS_FILES = $(addsuffix $(DEP),$(SRC_FILES) $(ST_TARGET_SRCS))
+ #--------------------------------------------------
+ # snc executable location
+ 
+-ifdef SNCSEQ
+- SNC = $(SNCSEQ)/bin/$(EPICS_HOST_ARCH)/snc$(HOSTEXE)
+-else
+- ifdef SEQ
+-  SNC = $(SEQ)/bin/$(EPICS_HOST_ARCH)/snc$(HOSTEXE)
+- else
+-  SNC = $(INSTALL_LOCATION)/bin/$(EPICS_HOST_ARCH)/snc$(HOSTEXE)
+- endif
+-endif
++SNC = $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)/bin/$(EPICS_HOST_ARCH)/snc
+ 
+ #--------------------------------------------------
+ # preserve compatibility to base versions before 3.14.12
+@@ -62,11 +54,6 @@ endef
+ #--------------------------------------------------
+ # Rules
+ 
+-%.st$(DEP): %.st
+-	$(ECHO) "generating dependencies for $<"
+-	@$(RM) $@
+-	$(MKMF) -m $@ $(USR_VPATH) $(ALL_SRC_DIRS) $*.i $<
+-
+ %.i: %.st
+ 	$(ECHO) "preprocessing $<"
+ 	@$(RM) $@
+@@ -82,6 +69,10 @@ endef
+ 	@$(RM) $@
+ 	$(COMPILE.snl)
+ 
++%_snl.dbd: %.c
++	$(ECHO) "Building dbd file $@"
++	awk -F [\(\)]  '/epicsExportRegistrar/ { print "registrar (" $$2 ")"}' $(*F).c > $@
++
+ CLEANS += $(wildcard *.d)
+ 
+ ifeq ($(BASE_3_14),YES)
