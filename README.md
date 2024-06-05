@@ -1,6 +1,6 @@
 # sequencer conda recipe
 
-Home: https://github.com/epics-modules/sequencer/archive/refs/tags/R2-2-9.tar.gz
+Home: https://github.com/epics-modules/sequencer
 
 Package license: EPICS Open License
 
