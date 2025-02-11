@@ -60,7 +60,7 @@ SOURCES += $(SEQUENCERPV)/pv.c
 HEADERS += $(SEQUENCERSNC)/seqMain.c
 
 CONFIGS += configure/RULES_SNCSEQ
-CONFIGS += CONFIG_SNCSEQ
+CONFIGS += configure/CONFIG_SNCSEQ
 
 TEMP_PATH :=$(where_am_I)O.$(EPICSVERSION)_$(T_A)
 SNC       :=$(TEMP_PATH)/bin/snc
