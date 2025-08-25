@@ -22,7 +22,6 @@ requirements:
   build:
     - make
     - perl
-    - tclx
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - re2c
