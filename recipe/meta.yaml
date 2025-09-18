@@ -14,7 +14,7 @@ source:
 
 build:
   skip: True  # [ppc64]
-  number: 3
+  number: 4
   run_exports:
     - {{ pin_subpackage('sequencer', max_pin='x.x.x.x') }}
 
