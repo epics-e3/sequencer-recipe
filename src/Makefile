@@ -3,7 +3,6 @@
 # require-ess from 3.0.1
 #LEGACY_RSET = YES
 
-where_am_I := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 include $(E3_REQUIRE_TOOLS)/driver.makefile
 
 USR_CPPFLAGS += -DUSE_TYPED_RSET
@@ -150,7 +149,3 @@ $(LEMON_HOST): $(where_am_I)$(SEQUENCERLEMON)/lemon.c
 	@echo "<<<<< lemon Done "
 	@echo ""
 	@echo ""
-
-
-.PHONY: vlibs
-vlibs:
