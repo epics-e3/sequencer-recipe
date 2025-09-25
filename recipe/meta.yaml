@@ -30,11 +30,13 @@ requirements:
     - require
 
 test:
+  files:
+    - test/test.st
   requires:
     - run-iocsh
   commands:
     - lemon -x
-    - snc
+    - snc test/test.st
     - run-iocsh -r sequencer
 
 about:
