@@ -15,7 +15,7 @@ index 73fef63..900ebc1 100644
 -  SNC = $(INSTALL_LOCATION)/bin/$(EPICS_HOST_ARCH)/snc$(HOSTEXE)
 - endif
 -endif
-+SNC = $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)/bin/$(EPICS_HOST_ARCH)/snc
++SNC = ${INSTALL_PREFIX}/bin/snc
  
  #--------------------------------------------------
  # preserve compatibility to base versions before 3.14.12

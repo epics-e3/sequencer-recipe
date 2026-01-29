@@ -13,29 +13,30 @@ source:
 
 
 build:
-  skip: True  # [ppc64]
-  number: 3
+  number: 7
   run_exports:
     - {{ pin_subpackage('sequencer', max_pin='x.x.x.x') }}
 
 requirements:
   build:
-    - make
-    - perl
-    - tclx
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - {{ stdlib('c') }}
+    - make
+    - perl
     - re2c
   host:
     - epics-base
     - require
 
 test:
+  files:
+    - test/test.st
   requires:
     - run-iocsh
   commands:
-    - test -f "${PREFIX}/modules/sequencer/{{ version }}/bin/linux-x86_64/lemon"
-    - test -f "${PREFIX}/modules/sequencer/{{ version }}/bin/linux-x86_64/snc"
+    - lemon -x
+    - snc test/test.st
     - run-iocsh -r sequencer
 
 about:
