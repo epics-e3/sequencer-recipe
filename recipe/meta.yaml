@@ -13,7 +13,7 @@ source:
     - patch/pv_time_get_current_double_return_type.p0.patch
 
 build:
-  number: 7
+  number: 8
   run_exports:
     - {{ pin_subpackage('sequencer', max_pin='x.x.x') }}
 
@@ -30,14 +30,22 @@ requirements:
     - require
 
 test:
-  files:
-    - test/test.st
+  source_files:
+    - ./test
   requires:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ stdlib('c') }}
+    - make
+    - pytest
     - run-iocsh
+    - p4p
   commands:
+    # Smoke-tests for tools
     - lemon -x
-    - snc test/test.st
+    - snc test/sequencer-module/src/test.st
     - run-iocsh -r sequencer
+    - pytest -v test/
 
 about:
   home: https://github.com/epics-modules/sequencer
