@@ -1,18 +1,8 @@
-#
-# LEGACY_RSET should be defined before driver.makefile
-# require-ess from 3.0.1
-#LEGACY_RSET = YES
-
 include $(E3_REQUIRE_TOOLS)/driver.makefile
 
 USR_CPPFLAGS += -DUSE_TYPED_RSET
 
-
-# LIBVERSION is defined in configure/CONFIG
-# is transfered via Makefile
-#
 SEQ_VER=$(LIBVERSION)
-
 
 SEQUENCER      :=src
 SEQUENCERPV    :=$(SEQUENCER)/pv
@@ -21,18 +11,15 @@ SEQUENCERSEQ   :=$(SEQUENCER)/seq
 SEQUENCERLEMON :=$(SEQUENCER)/lemon
 SEQUENCERSNC   :=$(SEQUENCER)/snc
 
-
 USR_INCLUDES += -I$(COMMON_DIR)
 USR_INCLUDES += -I$(where_am_I)$(SEQUENCERPV)
 USR_INCLUDES += -I$(where_am_I)$(SEQUENCERCOMMON)
 USR_INCLUDES += -I$(where_am_I)$(SEQUENCERSEQ)
 USR_INCLUDES += -I$(where_am_I)$(SEQUENCERSNC)
 
-
 HEADERS += $(SEQUENCERSEQ)/seqCom.h
 HEADERS += $(SEQUENCERSEQ)/seqStats.h
 HEADERS += $(SEQUENCERSEQ)/seq_snc.h
-
 
 SOURCES += $(SEQUENCERSEQ)/seq_main.c
 SOURCES += $(SEQUENCERSEQ)/seq_task.c
@@ -44,11 +31,9 @@ SOURCES += $(SEQUENCERSEQ)/seq_qry.c
 SOURCES += $(SEQUENCERSEQ)/seq_cmd.c
 SOURCES += $(SEQUENCERSEQ)/seq_queue.c
 
-
 HEADERS += $(SEQUENCERCOMMON)/seq_mask.h
 HEADERS += $(SEQUENCERCOMMON)/seq_prim_types.h
 HEADERS += $(COMMON_DIR)/seq_release.h
-
 
 HEADERS += $(SEQUENCERPV)/pv.h
 HEADERS += $(SEQUENCERPV)/pvAlarm.h
@@ -65,13 +50,12 @@ TEMP_PATH :=$(where_am_I)O.$(EPICSVERSION)_$(T_A)
 SNC       :=$(TEMP_PATH)/bin/snc
 LEMON_HOST:=$(where_am_I)O.$(EPICSVERSION)_$(EPICS_HOST_ARCH)/bin/lemon
 
-# We are not using the snc while compiling E3 modules (no test,
+# We are not using the snc while compiling e3 modules
 SNC_HOST:=$(where_am_I)O.$(EPICSVERSION)_$(EPICS_HOST_ARCH)/bin/snc
 
 # Note that lemon only need to be built for the host architecture.
 BINS_$(EPICS_HOST_ARCH) += $(LEMON_HOST)
 BINS += $(SNC)
-
 
 vpath %.c   $(where_am_I)$(SEQUENCERSNC)
 vpath %.h   $(where_am_I)$(SEQUENCERSNC)
@@ -79,7 +63,6 @@ vpath %.h   $(where_am_I)$(SEQUENCERSNC)
 vpath %.lem $(where_am_I)$(SEQUENCERSNC)
 vpath %.lt  $(where_am_I)$(SEQUENCERSNC)
 vpath %.re  $(where_am_I)$(SEQUENCERSNC)
-
 
 pv$(DEP): $(COMMON_DIR)/seq_release.h
 
@@ -103,7 +86,6 @@ $(COMMON_DIR)/seq_release.h:
 #  TODO: Find a better solution for this.
 $(DEPFILE): $(SNC)
 
-
 # We only use linux, so I added $(OP_SYS_LDFLAGS) $(ARCH_DEP_LDFLAGS)
 $(SNC): lexer.c $(patsubst %.c,%.o, lexer.c snl.c main.c node.c var_types.c analysis.c gen_code.c gen_ss_code.c gen_tables.c sym_table.c builtin.c type_check.c )
 	@echo ""
@@ -123,9 +105,6 @@ snl.c snl.h: $(addprefix $(where_am_I)$(SEQUENCERSNC)/, snl.lem snl.lt) $(LEMON_
 	$(RM) snl.c snl.h
 	$(LEMON_HOST) o=. $<
 
-
-
-#
 # lemon is called in the host, so the hard-coded gcc, which is the host
 # If one changes it to $(COMPILE.c), the compiling process fails.
 # driver.makefile is trying to find the binary in $(where_am_I)
@@ -135,10 +114,7 @@ snl.c snl.h: $(addprefix $(where_am_I)$(SEQUENCERSNC)/, snl.lem snl.lt) $(LEMON_
 #	@echo "Installing binaries $^ to $(@D)"
 #	$(INSTALL) -d -m555 $^ $(@D)
 #
-#
-#
 # $(LINK.c) doesn't work, because it use driver.makefile instead of EPICS BASE
-#
 $(LEMON_HOST): $(where_am_I)$(SEQUENCERLEMON)/lemon.c
 	@echo ""
 	@echo ""
