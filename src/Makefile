@@ -64,7 +64,8 @@ vpath %.lem $(where_am_I)$(SEQUENCERSNC)
 vpath %.lt  $(where_am_I)$(SEQUENCERSNC)
 vpath %.re  $(where_am_I)$(SEQUENCERSNC)
 
-pv$(DEP): $(COMMON_DIR)/seq_release.h
+SEQUENCER_NEEDS_SEQ_RELEASE := seq_main seq_task seq_ca seq_if seq_mac seq_prog seq_qry seq_cmd seq_queue pv
+$(addsuffix $(DEP),$(SEQUENCER_NEEDS_SEQ_RELEASE)): $(COMMON_DIR)/seq_release.h
 
 $(COMMON_DIR)/seq_release.h:
 	$(RM) $@
