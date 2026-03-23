@@ -10,6 +10,7 @@ source:
   - path: ../src
   - patches:
     - patch/update_sequencer_rules.p0.patch
+    - patch/pv_time_get_current_double_return_type.p0.patch
 
 build:
   number: 7
