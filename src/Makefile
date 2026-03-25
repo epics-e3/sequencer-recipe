@@ -10,7 +10,7 @@ USR_CPPFLAGS += -DUSE_TYPED_RSET
 
 # LIBVERSION is defined in configure/CONFIG
 # is transfered via Makefile
-# 
+#
 SEQ_VER=$(LIBVERSION)
 
 
@@ -65,7 +65,7 @@ TEMP_PATH :=$(where_am_I)O.$(EPICSVERSION)_$(T_A)
 SNC       :=$(TEMP_PATH)/bin/snc
 LEMON_HOST:=$(where_am_I)O.$(EPICSVERSION)_$(EPICS_HOST_ARCH)/bin/lemon
 
-# We are not using the snc while compiling E3 modules (no test, 
+# We are not using the snc while compiling E3 modules (no test,
 SNC_HOST:=$(where_am_I)O.$(EPICSVERSION)_$(EPICS_HOST_ARCH)/bin/snc
 
 # Note that lemon only need to be built for the host architecture.
@@ -125,12 +125,12 @@ snl.c snl.h: $(addprefix $(where_am_I)$(SEQUENCERSNC)/, snl.lem snl.lt) $(LEMON_
 
 
 
-# 
+#
 # lemon is called in the host, so the hard-coded gcc, which is the host
 # If one changes it to $(COMPILE.c), the compiling process fails.
 # driver.makefile is trying to find the binary in $(where_am_I)
 # not in O.3.15.5_linux-x86_64. So I copy it to $(where_am_I)
-# OR we have to remove ../ prefix in driver.makefile as 
+# OR we have to remove ../ prefix in driver.makefile as
 # ${INSTALL_BINS}: $(addprefix ../,$(filter-out /%,${BINS})) $(filter /%,${BINS})
 #	@echo "Installing binaries $^ to $(@D)"
 #	$(INSTALL) -d -m555 $^ $(@D)
