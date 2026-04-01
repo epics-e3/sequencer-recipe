@@ -1,0 +1,10 @@
+record(ao, "TEST:Control") {
+    field(DESC, "Sequencer control input")
+    field(VAL,  "0")
+    field(PINI, "YES")
+}
+
+record(ao, "TEST:State") {
+    field(DESC, "Sequencer state output")
+    field(VAL,  "-1")
+}

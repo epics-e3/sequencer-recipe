@@ -1,0 +1,11 @@
+--- src/pv/pv.c
++++ src/pv/pv.c
+@@ -152,7 +152,7 @@
+     return (unsigned)c;
+ }
+ 
+-epicsShareFunc int pvTimeGetCurrentDouble(double *pTime)
++epicsShareFunc pvStat pvTimeGetCurrentDouble(double *pTime)
+ {
+     epicsTimeStamp stamp;
+ 
