@@ -1,6 +1,7 @@
 import logging
 import os
 import subprocess
+import sys
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -11,6 +12,8 @@ from run_iocsh import IOC, wait_for
 LOG = logging.getLogger(__name__)
 
 TEST_DIR = Path(__file__).parent
+
+SHRLIB_SUFFIX = ".dylib" if sys.platform == "darwin" else ".so"
 
 pytestmark = pytest.mark.skipif(
     not os.environ.get("CONDA_BUILD"),
@@ -40,7 +43,7 @@ def sequencer_module():
     LOG.error("make stdout:\n%s", r.stdout)
     LOG.error("make stderr:\n%s", r.stderr)
     r.check_returncode()
-    lib = Path(os.environ["PREFIX"]) / "lib" / "libseqtest.so"
+    lib = Path(os.environ["PREFIX"]) / "lib" / f"libseqtest{SHRLIB_SUFFIX}"
     if not lib.exists():
         raise RuntimeError("seqtest module was not installed")
 
