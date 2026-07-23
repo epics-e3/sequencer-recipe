@@ -13,7 +13,7 @@ source:
     - patch/pv_time_get_current_double_return_type.p0.patch
 
 build:
-  number: 8
+  number: 9
   run_exports:
     - {{ pin_subpackage('sequencer', max_pin='x.x.x') }}
 
